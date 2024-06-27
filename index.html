@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>weather app</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="card">
+
+        <section class="first-section">
+<div class="input">
+    <label for="inputbox"></label>
+    <input type="text" id="myInput" placeholder="enter city name" spellcheck="false" onblur="getval()">
+</div>
+<button class="search" onclick="getValue()"><img src="images/search.png"></button>
+</section>
+<div class="error">your city is invalid , please enter valid city name</div>        
+        <div class="weather">
+        <section class="second-section">
+            <div class="weather-img"><img src="images/rain.png" class="weather-icon"></div>
+            <div class="temperature"><h2>22°c</h2></div>
+            <div class="city">New Delhi</div>
+        </section>
+        <section class="third">
+            <div class="humidity"><img src="images/humidity.png"><div class="humi">50%</div></div>
+            <div class="wind"><img src="images/wind.png"><div class="win">20km/h</div></div>
+        </section>
+    </div>
+    </div>
+
+    <script>
+
+
+
+const apikey="3f4fd58db17b3fc9d755d0d32a77f711";
+const apiurl="https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+const weathericon= document.querySelector(".weather-icon")
+
+async function checkweather(city){
+    const response = await fetch(apiurl + city + `&appid=${apikey}`)
+if(response.status==404){
+    document.querySelector(".error").style.display="block"
+    document.querySelector(".weather").style.display="none"
+} else{
+
+    var data = await response.json()
+
+    document.querySelector(".city").innerHTML=data.name
+    document.querySelector(".temperature").innerHTML=Math.round(data.main.temp)+"°c"
+    document.querySelector(".humi").innerHTML=data.main.humidity+"%"
+    document.querySelector(".win").innerHTML=data.wind.speed + "km/h"
+
+    console.log(data)
+
+
+    if(data.weather[0].main=="Clouds"){
+        weathericon.src="images/clouds.png";
+    }
+    else if(data.weather[0].main=="Clear"){
+        weathericon.src="images/clear.png";
+
+    }
+    else if(data.weather[0].main=="Rain"){
+        weathericon.src="images/rain.png";
+
+}
+else if(data.weather[0].main=="Drizzle"){
+    weathericon.src="images/drizzle.png";
+
+}
+else if(data.weather[0].main=="Mist"){
+    weathericon.src="images/mist.png";
+
+}
+
+document.querySelector(".weather").style.display = "block"
+document.querySelector(".error").style.display="none"
+
+
+
+}
+
+}
+
+function getValue() { 
+			// Get the input element by its ID 
+			let inputField = document.getElementById("myInput"); 
+		
+			// Get the value of the input field 
+			let value = inputField.value; 
+		
+			// Display the value in an alert 
+			checkweather(value)
+		} 
+    </script>
+</body>
+</html>
